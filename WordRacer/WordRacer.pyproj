@@ -21,7 +21,24 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="code\Actor.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="WordRacer.py" />
+    <Compile Include="_Actors\ActorText.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="_Actors\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="code\" />
+    <Folder Include="_Actors\" />
+    <Folder Include="Title\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
