@@ -1,20 +1,29 @@
 class Observable(object):
-
-	observers = []
-	
 	
 	def __init__(self):
-		pass
+		
+		self.observers = list()
 	
 	
 	def attach(self,
-		_observer):
+		_callback):
 		
-		self.observers.Append(
-			_observer)
+		if not _callback in self.observers:
+			self.observers.append(_callback)
+		
+	
+	def remove(self,
+		_callback):
+		
+		if _callback in self.observers:
+			self.observers.remove(_callback)
 	
 	
-	def inform(self):
-		
-		for observer in self.observers:
-			observer.act()
+	def inform(self,
+		_sender,
+		_event):
+	
+		for callback in self.observers:
+			callback(
+				_sender,
+				_event)
