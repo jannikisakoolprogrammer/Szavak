@@ -1,6 +1,9 @@
 import pygame
 pygame.init()
 
+import random
+import sys
+
 config = dict()
 config["font_name"] = ""
 config["font_size"] = 20
@@ -15,28 +18,28 @@ class Observable(object):
 	
 	def __init__(self):
 		
-		self.observers = dict()
+		self.observers = list()
 	
 	
 	def attach(self,
-		_observer,
 		_callback):
-	
-		self.observers[_observer] = _callback
+		
+		if not _callback in self.observers:
+			self.observers.append(_callback)
 		
 	
 	def remove(self,
-		_observer):
+		_callback):
 		
-		if _observer in self.observers:
-			del self.observers[_observer]
+		if _callback in self.observers:
+			self.observers.remove(_callback)
 	
 	
 	def inform(self,
 		_sender,
 		_event):
 	
-		for observer, callback in self.observers.items():
+		for callback in self.observers:
 			callback(
 				_sender,
 				_event)
@@ -50,29 +53,58 @@ class EventSprite(pygame.sprite.Sprite):
 		
 		self.quit = Observable()
 		self.activeevent = Observable()
+		self.clicked = Observable()
 		
 	
 	def attach_quit(self,
-		_observer,
 		_callback):
 		
 		self.quit.attach(
-			_observer,
 			_callback)
+	
+	
+	def attach_activeevent(self,
+		_callback):
 		
+		self.activeevent.attach(
+			_callback)
+	
+	
+	def attach_clicked(
+		self,
+		_callback):
 		
+		self.clicked.attach(
+			_callback)
+				
 	
 	def update(
 		self,
 		_events = []):
 		
 		for e in _events:
-			print(e)
-			if e.type == pygame.KEYDOWN:
-				if e.key == pygame.K_ESCAPE:
-					self.quit.inform(
-						self,
-						e)
+			self.handle_events(
+				e)
+
+	
+	
+	def handle_events(
+		self,
+		_e):
+
+		if _e.type == pygame.KEYDOWN:
+			if _e.key == pygame.K_ESCAPE:
+				self.quit.inform(
+					self,
+					_e)
+		
+		elif _e.type == pygame.MOUSEBUTTONDOWN:
+			points = pygame.mouse.get_pos()
+			if self.rect.collidepoint(
+				points) == True:
+				self.clicked.inform(
+					self,
+					_e)
 		
 		
 		
@@ -113,51 +145,148 @@ class Word(EventSprite):
 		
 		self.rect.top = self.top
 		self.rect.left = self.left
-
-
-class Presenter(object):
-	def __init__(self,
-		_word):
-		self.word = _word
-		self.word.attach_quit(
-			self,
-			self.on_quit)
-		
-		self.running = True
-			
 	
-	def run(self):
-		clock = pygame.time.Clock()
+	
+	def set_background(self, _colour):
+		self.image = self.font.render(
+			self.word,
+			self.anti_aliasing,
+			self.fg_colour,
+			_colour)
+		
+		
+	def handle_events(
+		self,
+		_e):
 
-		window = pygame.display.set_mode(
-			(640, 480))
+		super(Word, self).handle_events(_e)
+
+		if _e.type == pygame.KEYDOWN:
+			if _e.key == pygame.K_RETURN:
+				self.activeevent.inform(
+					self,
+					_e)		
+
+
+class WordDictionary(object):
+	
+	def __init__(
+		self,
+		_config = dict()):
+		
+		self.config = _config
+		
+		self.filepath = self.config["filepath"] if "filepath" in self.config else sys.exit("Filename not given")
+
+
+class View(EventSprite):
+
+	def __init__(self,
+		_window,
+		_clock):
+	
+		super(View, self).__init__()
+		
+		self.image = _window
+		self.rect = self.image.get_rect()
+		self.clock = _clock
+		
+		self.running = True	
+		self.create_objects();
+		
+		self.sprites = pygame.sprite.Group()
+		self.sprites.add(
+			self)
+		self.sprites.add(
+			self.word)
+		self.sprites.add(
+			self.word2)
+		
+	def run(self):
 
 		while self.running:
 			events = pygame.event.get()
-			self.word.update(events)
+			self.update(events) # Global window events.
+			self.sprites.update(events)
 						
-			window.fill((255, 255, 255))
+			self.image.fill((255, 255, 255))
 			
-			window.blit(
-				self.word.image,
-				self.word.rect)
+			self.sprites.draw(
+				self.image)
+
 			pygame.display.update()
-			clock.tick(30)		
-			
-		pygame.display.quit()
+			self.clock.tick(30)	
 	
+	
+	def create_objects(self):
+		
+		self.word = Word(
+			config)
+			
+		config["top"] = 300
+		config["left"] = 500
+		self.word2 = Word(
+			config)
+		
+
+
+class Presenter(object):
+	def __init__(self):
+		
+		config = dict()
+		config["filepath"] = "woeijfoiwjfo.wef"
+		self.word_dictionary = WordDictionary(
+			config)
+			
+		self.window = pygame.display.set_mode(
+			(640, 480))		
+		self.clock = pygame.time.Clock()
+			
+		self.view = View(
+			self.window,
+			self.clock)
+		
+		self.view.attach_quit(
+			self.on_quit)
+			
+		self.view.word.attach_activeevent(
+			self.hello)
+		self.view.word.attach_clicked(
+			self.clicked)
+		self.view.word2.attach_clicked(
+			self.clicked)
+		
+			
+	
+	def run(self):
+	
+		self.view.run()				
+		pygame.display.quit()	
 			
 	
 	def on_quit(self,
 		_sender,
 		_eventargs):
-		self.running = False
 		
-
-word = Word(
-	config)
+		self.view.running = False
 	
-presenter = Presenter(word)
+	
+	def hello(self,
+		_sender,
+		_eventargs):
+		
+		print("Hello")
+	
+	
+	def clicked(
+		self,
+		_sender,
+		_eventargs):
+		_sender.set_background((
+			random.randint(0, 255),
+			random.randint(0, 255),
+			random.randint(0, 255)))
+		
+	
+presenter = Presenter()
 presenter.run()
-
-
