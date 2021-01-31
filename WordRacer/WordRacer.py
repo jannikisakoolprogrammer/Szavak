@@ -42,3 +42,4 @@ title_presenter = TitlePresenter(
 	presenter)
 	
 title_presenter.run()
+pygame.display.quit()	

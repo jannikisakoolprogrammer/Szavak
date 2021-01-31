@@ -20,7 +20,10 @@ class Model(object):
 		self.lines = dict()
 		
 		with open(
-			self.filepath) as file_handle:			
+			self.filepath,
+			"r",
+			-1,
+			"utf-8") as file_handle:			
 			self.lines = file_handle.readlines()
 	
 	
@@ -36,10 +39,10 @@ class Model(object):
 		
 		self.chosen_word_idx = random.randint(
 			0,
-			n_words)
+			n_words-1)
 		
 		for x in range(n_words):
 			l = self.lines[x]
 			split_l = l.split("-")
-			self.selected_word_pairs[split_l[0].strip()] = split_l[1].strip()
+			self.selected_word_pairs[x] = (split_l[0].strip(), split_l[1].strip())
 		

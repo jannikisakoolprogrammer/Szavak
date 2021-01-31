@@ -15,6 +15,7 @@ class EventSprite(pygame.sprite.Sprite):
 		self.clicked = Observable()
 		self.hover = Observable()
 		self.blur = Observable()
+		self.created = Observable()
 		
 		
 		self.hover_active = False		

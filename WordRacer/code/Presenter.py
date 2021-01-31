@@ -23,8 +23,7 @@ class Presenter(object):
 	
 	def run(self):
 	
-		self.view.run()				
-		pygame.display.quit()	
+		self.view.run()
 			
 	
 	def on_quit(self,

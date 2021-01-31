@@ -2,9 +2,10 @@ import pygame
 pygame.init()
 
 from code.Presenter import Presenter
+
+from code.Game.GamePresenter import GamePresenter
 from code.Game.GameView import GameView
 from code.Game.GameModel import GameModel
-from code.Game.GamePresenter import GamePresenter
 
 
 class TitlePresenter(Presenter):
@@ -26,6 +27,8 @@ class TitlePresenter(Presenter):
 			self.button_on_hover)
 		self.view.start.blur.attach(
 			self.button_on_blur)
+		self.view.start.clicked.attach(
+			self.on_button_start_clicked)
 			
 		# Connect event handlers to options button.
 		self.view.options.hover.attach(
@@ -56,6 +59,23 @@ class TitlePresenter(Presenter):
 		_eventargs):
 		
 		_sender.on_blur()
+		
+	
+	def on_button_start_clicked(
+		self,
+		_sender,
+		_eventargs):
+		
+		game_model = GameModel(
+			self.model)
+		
+		game_view = GameView(
+			self.view)
+		
+		game_presenter = GamePresenter(
+			game_model,
+			game_view,
+			self)
 		
 	
 	def button_quit_clicked(

@@ -4,14 +4,14 @@ pygame.init()
 from code.EventSprite import EventSprite
 
 
-class Word(EventSprite):
+class TranslatedWord(EventSprite):
 	def __init__(
 		self,
 		_config = dict(),
 		_word = "egy",
 		_translation = "eins"):
 		
-		super(Word, self).__init__()
+		super(TranslatedWord, self).__init__()
 		
 		self.config = _config
 		
@@ -39,9 +39,6 @@ class Word(EventSprite):
 		
 		self.rect.top = self.top
 		self.rect.left = self.left
-		
-		self.red_colour = (200, 0, 0)
-		self.green_colour = (0, 200, 0)
 	
 	
 	def set_background(self, _colour):
@@ -63,58 +60,17 @@ class Word(EventSprite):
 		self.rect = self.image.get_rect()
 		self.rect.centery = self.height
 		
-		
-	def on_hover(
-		self):
-		
-		self.image = self.font.render(
-			self.word,
-			self.anti_aliasing,
-			self.bg_colour,
-			self.fg_colour)
-	
-	
-	def on_blur(
-		self):
-		
-		self.image = self.font.render(
-			self.word,
-			self.anti_aliasing,
-			self.fg_colour,
-			self.bg_colour)
-			
-		
 	def handle_events(
 		self,
 		_e):
 
-		super(Word, self).handle_events(_e)
+		super(TranslatedWord, self).handle_events(_e)
 
 		if _e.type == pygame.KEYDOWN:
 			if _e.key == pygame.K_RETURN:
 				self.activeevent.inform(
 					self,
 					_e)		
-	
-	
-	def mark_green(
-		self):
-		
-		self.image = self.font.render(
-			self.word,
-			self.anti_aliasing,
-			self.fg_colour,
-			self.green_colour)		
-			
-			
-	def mark_red(
-		self):
-		
-		self.image = self.font.render(
-			self.word,
-			self.anti_aliasing,
-			self.fg_colour,
-			self.red_colour)				
 	
 	
 	def set_word_info(
@@ -127,6 +83,6 @@ class Word(EventSprite):
 		self.translated = _translated
 		self.correct_word_idx = _correct_word_idx
 		
-		self.word = self.native
+		self.word = self.translated
 		
 		self.render()

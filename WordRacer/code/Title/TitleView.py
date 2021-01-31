@@ -22,7 +22,7 @@ class TitleView(View):
 	
 		# Title of the game.
 		config = dict()
-		config["text"] = "KoolSzavak"
+		config["text"] = "Szavak"
 		config["font_size"] = 100
 		config["bg_colour"] = (200, 200, 200)		
 		self.title = Label(

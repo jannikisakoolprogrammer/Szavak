@@ -1,15 +1,14 @@
 from code.Model import Model
 
 
-class GameModel(object):
+class GameModel(Model):
 	
 	def __init__(
 		self,
 		_base_model,
 		_config = dict()):
 		
-		self.base_model = _base_model
-		self.config = _config
-		
-		
-		
+		super(
+			GameModel,
+			self).__init__(
+				_base_model.config)
