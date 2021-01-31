@@ -13,3 +13,5 @@ class WordDictionary(object):
 		self.config = _config
 		
 		self.filepath = self.config["filepath"] if "filepath" in self.config else sys.exit("Filename not given")
+		
+

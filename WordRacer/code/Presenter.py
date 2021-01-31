@@ -3,36 +3,22 @@ pygame.init()
 
 import random
 
-from code.View import View
-from code.WordDictionary import WordDictionary
+
 
 
 class Presenter(object):
-	def __init__(self):
+	def __init__(self,
+		_model,
+		_view,
+		_parent_presenter = None):
 		
-		config = dict()
-		config["filepath"] = "woeijfoiwjfo.wef"
-		self.word_dictionary = WordDictionary(
-			config)
-			
-		self.window = pygame.display.set_mode(
-			(640, 480))		
-		self.clock = pygame.time.Clock()
-			
-		self.view = View(
-			self.window,
-			self.clock)
+		self.model = _model
+		self.view = _view
 		
 		self.view.attach_quit(
 			self.on_quit)
-			
-		self.view.word.attach_activeevent(
-			self.hello)
-		self.view.word.attach_clicked(
-			self.clicked)
-		self.view.word2.attach_clicked(
-			self.clicked)
-		
+
+		self.parent_presenter = _parent_presenter
 			
 	
 	def run(self):
@@ -52,7 +38,16 @@ class Presenter(object):
 		_sender,
 		_eventargs):
 		
-		print("Hello")
+		view = GameView(
+			self.view.image,
+			self.view.clock)
+		model = GameModel(
+			self.model)		
+		presenter = GamePresenter(
+			model,
+			view,
+			self)
+		presenter.run()
 	
 	
 	def clicked(
