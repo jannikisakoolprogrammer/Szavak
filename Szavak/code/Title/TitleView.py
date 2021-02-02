@@ -23,7 +23,7 @@ class TitleView(View):
 		# Title of the game.
 		config = dict()
 		config["text"] = "Szavak"
-		config["font_size"] = 100
+		config["font_size"] = 80
 		config["bg_colour"] = (200, 200, 200)		
 		self.title = Label(
 			config)
@@ -35,9 +35,8 @@ class TitleView(View):
 		# Subtitle of the game.
 		config = dict()
 		config["text"] = "Tanulj magyar szavakat!"
-		config["font_size"] = 50
-		config["fg_colour"] = (100, 100, 100)
-		config["bg_colour"] = (200, 200, 200)
+		config["font_size"] = 40
+		config["bg_colour"] = (200, 200, 200)		
 		config["top"] = 100
 		self.subtitle = Label(
 			config)
@@ -47,7 +46,9 @@ class TitleView(View):
 		# Start the game.
 		config = dict()
 		config["text"] = "Start"
-		config["font_size"] = 40		
+		config["font_size"] = 30		
+		config["fg_colour"] = (220, 240, 0)
+		config["bg_colour"] = (200, 200, 200)				
 		config["top"] = 200
 		self.start = Button(
 			config)
@@ -57,7 +58,9 @@ class TitleView(View):
 		# Options.
 		config = dict()
 		config["text"] = "Options"
-		config["font_size"] = 40			
+		config["font_size"] = 30	
+		config["fg_colour"] = (220, 240, 0)
+		config["bg_colour"] = (200, 200, 200)		
 		config["top"] = 250
 		self.options = Button(
 			config)
@@ -67,7 +70,9 @@ class TitleView(View):
 		# End the game.
 		config = dict()
 		config["text"] = "Exit"
-		config["font_size"] = 40			
+		config["font_size"] = 30
+		config["fg_colour"] = (220, 240, 0)
+		config["bg_colour"] = (200, 200, 200)			
 		config["top"] = 300
 		self.exit = Button(
 			config)

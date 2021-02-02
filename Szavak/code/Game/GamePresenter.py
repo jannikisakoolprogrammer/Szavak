@@ -20,6 +20,7 @@ class GamePresenter(Presenter):
 				_parent_presenter)
 		
 		self.load_next_words()
+		self.update_words_done()
 		
 		# Connect event handlers to words.
 		words = (
@@ -75,13 +76,18 @@ class GamePresenter(Presenter):
 		time.sleep(1)
 		# Load next word.
 		self.load_next_words()
+		
+		self.update_words_done()
 	
 	
 	def load_next_words(
 		self):
 		
-		self.model.load_words()
-		self.model.fetch_words()
+		result = self.model.fetch_words()
+		
+		if result == True:
+			self.view.running = False
+			return
 		
 		words = (
 			self.view.word1,
@@ -90,13 +96,15 @@ class GamePresenter(Presenter):
 			self.view.word4,
 			self.view.word5)
 			
-		for x in range(len(words)):
-			words[x].set_word_info(
-				self.model.selected_word_pairs[x][0],
-				self.model.selected_word_pairs[x][1],
+		counter = 0
+		for word_pair in self.model.selected_word_pairs.values():
+			words[counter].set_word_info(
+				word_pair[0],
+				word_pair[1],
 				self.model.chosen_word_idx)
-			words[x].align_centerw(
+			words[counter].align_centerw(
 				self.view.rect)
+			counter += 1
 		
 		self.view.translated_word.set_word_info(
 			self.model.selected_word_pairs[self.model.chosen_word_idx][0],
@@ -104,3 +112,14 @@ class GamePresenter(Presenter):
 			self.model.chosen_word_idx)
 		self.view.translated_word.align_centerw(
 			self.view.rect)
+	
+	
+	def update_words_done(
+		self):
+
+		txt = "Words done: %i/%i" % (
+			self.model.counter,
+			self.model.total_words)
+		self.view.words.set_text(
+			txt)
+		self.view.words.render()
